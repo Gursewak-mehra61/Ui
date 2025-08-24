@@ -155,15 +155,16 @@ export default function Demo() {
     setSelectedRows([]);
   };
 
-  const handleEdit = (user: User, index: number) => {
-    setEditingUser(user);
-    setShowEditModal(true);
-  };
+  const handleEdit = (user: User) => {
+  setEditingUser(user);
+  setShowEditModal(true);
+};
 
-  const handleDelete = (user: User, index: number) => {
-    setUserToDelete(user);
-    setShowDeleteModal(true);
-  };
+const handleDelete = (user: User) => {
+  setUserToDelete(user);
+  setShowDeleteModal(true);
+};
+
 
   const confirmDelete = () => {
     if (userToDelete) {

@@ -9,9 +9,11 @@ export const DataTable = <T extends {}>({
   onRowSelect,
   renderCell,
   sortField,
-  sortDirection = 'asc',
+  sortDirection = "asc",
   onSort,
-}: DataTableProps<T>) => {
+  onEdit,    // Callback for edit action
+  onDelete,  // Callback for delete action
+}: DataTableProps<T> & { onEdit?: (row: T) => void; onDelete?: (row: T) => void }) => {
   const [selectedIndexes, setSelectedIndexes] = useState<number[]>([]);
 
   const handleSelect = (idx: number) => {
@@ -41,12 +43,10 @@ export const DataTable = <T extends {}>({
                     {col.title}
                     {sortField === col.dataIndex && (
                       <span className="text-blue-600">
-                        {sortDirection === 'asc' ? '↑' : '↓'}
+                        {sortDirection === "asc" ? "↑" : "↓"}
                       </span>
                     )}
-                    {sortField !== col.dataIndex && (
-                      <span className="text-gray-400">↕</span>
-                    )}
+                    {sortField !== col.dataIndex && <span className="text-gray-400">↕</span>}
                   </button>
                 ) : (
                   <span className="font-semibold text-gray-700">{col.title}</span>
@@ -59,11 +59,15 @@ export const DataTable = <T extends {}>({
         <tbody>
           {loading ? (
             <tr>
-              <td colSpan={columns.length + (rowSelection ? 2 : 1)} className="text-center p-4">Loading...</td>
+              <td colSpan={columns.length + (rowSelection ? 2 : 1)} className="text-center p-4">
+                Loading...
+              </td>
             </tr>
           ) : data.length === 0 ? (
             <tr>
-              <td colSpan={columns.length + (rowSelection ? 2 : 1)} className="text-center p-4">No results found</td>
+              <td colSpan={columns.length + (rowSelection ? 2 : 1)} className="text-center p-4">
+                No results found
+              </td>
             </tr>
           ) : (
             data.map((row, idx) => (
@@ -85,21 +89,25 @@ export const DataTable = <T extends {}>({
                 ))}
                 <td className="p-3 text-center">
                   <div className="flex gap-2 justify-center">
-                    <button 
-                      title="Edit" 
+                    <button
+                      title="Edit"
                       className="p-1 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors"
+                      onClick={() => onEdit && onEdit(row)}
                     >
+                      {/* Edit icon SVG */}
                       <svg width={16} height={16} fill="none" stroke="currentColor" strokeWidth={2}>
-                        <path d="M12 2l2 2m-2-2l-8 8m0 4h4l8-8"/>
+                        <path d="M12 2l2 2m-2-2l-8 8m0 4h4l8-8" />
                       </svg>
                     </button>
-                    <button 
-                      title="Delete" 
+                    <button
+                      title="Delete"
                       className="p-1 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
+                      onClick={() => onDelete && onDelete(row)}
                     >
+                      {/* Delete icon SVG */}
                       <svg width={16} height={16} fill="none" stroke="currentColor" strokeWidth={2}>
-                        <path d="M6 2v2M10 2v2m-7 2h14"/>
-                        <path d="M4 6v8c0 1 1 2 2 2h4c1 0 2-1 2-2V6"/>
+                        <path d="M6 2v2M10 2v2m-7 2h14" />
+                        <path d="M4 6v8c0 1 1 2 2 2h4c1 0 2-1 2-2V6" />
                       </svg>
                     </button>
                   </div>
